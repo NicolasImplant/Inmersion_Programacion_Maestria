@@ -1,6 +1,6 @@
 # Inmersión a la Programación — Actividad 1
 **Maestría en Inteligencia Artificial y Ciencia de Datos**  
-**Estudiante:** Nicolás Gómez  
+**Estudiante:** Juan Nicolas Patiño Rodriguez  
 **Docente:** Profesor Evaluador  
 
 ---

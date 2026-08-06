@@ -1,0 +1,10 @@
+[tool.mypy]
+python_version = "3.13"
+strict = true
+files = ["src"]
+
+# statsmodels y scikit-learn no publican stubs oficiales completos;
+# el resto del codigo propio se mantiene bajo tipado estricto.
+[[tool.mypy.overrides]]
+module = ["statsmodels.*", "sklearn.*"]
+ignore_missing_imports = true

@@ -1,5 +1,39 @@
 \section{Descomposición de la Serie de Tiempo}
 \label{sec:descomposicion}
 
-% TODO: metodologia de seasonal_decompose, interpretacion de tendencia,
-% estacionalidad y residuos.
+Aplicando la descomposición aditiva descrita en la Sección~\ref{sec:datos-metodologia}, la
+Figura~\ref{fig:descomposicion} separa la serie observada en sus tres componentes:
+tendencia, estacionalidad y residuo.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{fig04_descomposicion_bogota.pdf}
+  \caption{Descomposición aditiva de la serie de temperatura de Bogotá
+    (\AnalysisStartYear{}--\AnalysisEndYear{}): observado, tendencia, estacionalidad y
+    residuo.}
+  \label{fig:descomposicion}
+\end{figure}
+
+\paragraph{Tendencia.} El componente de tendencia confirma, de forma más nítida que la
+inspección visual de la serie cruda, un calentamiento gradual: pasa de valores cercanos a
+\SI{19.5}{\celsius} a comienzos del registro a valores por encima de \SI{21}{\celsius} en la
+última década disponible. La tendencia no es monótona —muestra oscilaciones de mediano plazo
+de algunas décadas de duración—, pero su dirección de largo plazo es consistentemente
+ascendente, coherente con la señal de calentamiento global documentada a escala planetaria.
+
+\paragraph{Estacionalidad.} El componente estacional mantiene una amplitud pico a pico
+estable de aproximadamente \SI{1.3}{\celsius} a lo largo de todo el periodo analizado, sin
+evidencia visual de que crezca o se contraiga con el nivel de la serie. Esto respalda la
+elección del modelo aditivo sobre el multiplicativo: si la estacionalidad escalara
+proporcionalmente con la tendencia (como asumiría un modelo multiplicativo), se esperaría ver
+una amplitud creciente en las décadas más recientes, algo que no se observa.
+
+\paragraph{Residuo.} El residuo tiene una media prácticamente nula y una desviación estándar
+de \num{\ResidStd}\,°C, con valores extremos entre \num{\ResidMin}\,°C y
+\num{\ResidMax}\,°C. Su dispersión se mantiene aproximadamente constante en el tiempo (sin el
+patrón de ``embudo'' que indicaría heterocedasticidad) y no exhibe una estructura visual
+evidente alrededor de cero, lo que sugiere que la mayor parte de la señal sistemática de la
+serie —tendencia de largo plazo y ciclo anual— ya fue capturada por los otros dos
+componentes. Este residuo, junto con la prueba de estacionariedad y el análisis de
+autocorrelación de la Sección~\ref{sec:modelado-pronostico}, es el punto de partida natural
+para el modelado SARIMA.

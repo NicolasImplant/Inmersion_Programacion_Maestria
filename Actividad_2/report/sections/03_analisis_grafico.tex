@@ -1,5 +1,60 @@
 \section{Análisis Gráfico}
 \label{sec:analisis-grafico}
 
-% TODO: serie completa de Bogota, comparacion de perfiles anuales entre ciudades,
-% distribucion mensual (boxplot).
+\subsection{Serie histórica de Bogotá}
+
+La Figura~\ref{fig:serie-historica} muestra la temperatura promedio mensual de Bogotá para
+el periodo de análisis \AnalysisStartYear{}--\AnalysisEndYear{}. La serie oscila dentro de una
+banda relativamente angosta: su media es de \num{\BogotaMean}\,°C, con una desviación estándar
+de apenas \num{\BogotaStd}\,°C y un rango entre \num{\BogotaMin}\,°C y \num{\BogotaMax}\,°C. A
+simple vista se aprecia un ligero desplazamiento hacia valores más cálidos en las últimas
+décadas del registro, algo que se caracteriza formalmente en la Sección~\ref{sec:descomposicion}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{fig01_serie_historica_bogota.pdf}
+  \caption{Temperatura promedio mensual de Bogotá, \AnalysisStartYear{}--\AnalysisEndYear{}.}
+  \label{fig:serie-historica}
+\end{figure}
+
+\subsection{Comparación climática entre ciudades}
+
+Para contextualizar el comportamiento de Bogotá, la Figura~\ref{fig:perfiles-climaticos}
+compara su perfil climático promedio mes a mes contra cuatro ciudades de climas
+marcadamente distintos: Berlín (templado boreal, hemisferio norte), El Cairo
+(desértico/subtropical), Bangkok (tropical monzónico) y Ciudad del Cabo (templado,
+hemisferio sur). El contraste es notable: Berlín y El Cairo muestran una amplitud estacional
+de más de \SI{15}{\celsius} entre su mes más frío y más cálido, con el pico de calor a mitad
+de año (verano boreal); Ciudad del Cabo exhibe el patrón inverso, con su pico en
+enero (verano austral); Bangkok, pese a ser tropical, aún presenta una variación apreciable
+asociada al régimen de monzones. \textbf{Bogotá, en cambio, es prácticamente plana a lo
+largo del año}, oscilando en un rango menor a \SI{1}{\celsius} entre sus meses extremos. Este
+comportamiento es característico de las ciudades ecuatoriales de altura: al estar cerca del
+ecuador, la duración del día y el ángulo de incidencia solar varían poco durante el año, por
+lo que la temperatura responde más a la altitud (Bogotá se ubica a más de \SI{2600}{\metre}
+sobre el nivel del mar) que a un ciclo estacional térmico marcado.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.75\textwidth]{fig02_perfiles_climaticos.pdf}
+  \caption{Perfil climático anual promedio (temperatura media por mes) para cinco ciudades
+    de climas distintos.}
+  \label{fig:perfiles-climaticos}
+\end{figure}
+
+\subsection{Distribución mensual y valores atípicos}
+
+La Figura~\ref{fig:boxplot-mensual} presenta un boxplot mes a mes de la temperatura de
+Bogotá. Consistente con la baja amplitud estacional observada, las medianas mensuales son
+muy similares entre sí, y los rangos intercuartílicos son estrechos. Se observan algunos
+valores atípicos, tanto por encima como por debajo de los bigotes, distribuidos a lo largo
+de varios meses; estos son compatibles con anomalías climáticas interanuales (p. ej. eventos
+El Niño/La Niña), más que con un patrón estacional adicional no capturado por el ciclo de 12
+meses.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.75\textwidth]{fig03_boxplot_mensual_bogota.pdf}
+  \caption{Distribución de la temperatura mensual de Bogotá por mes calendario.}
+  \label{fig:boxplot-mensual}
+\end{figure}

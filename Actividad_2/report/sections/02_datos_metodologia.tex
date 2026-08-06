@@ -1,5 +1,70 @@
 \section{Datos y Metodología}
 \label{sec:datos-metodologia}
 
-% TODO: descripcion del dataset, limpieza, ventana de analisis, metodologia de
-% descomposicion y de modelado.
+\subsection{Fuente y estructura de los datos}
+
+El conjunto de datos utilizado (\texttt{Actividad\_2\_Data.csv}) se deriva del histórico
+global de temperatura superficial compilado por \citet{berkeleyearth}. Cada registro
+corresponde a la temperatura promedio mensual observada en una ciudad, con las siguientes
+columnas: \texttt{dt} (fecha, primer día del mes), \texttt{Average\-Temperature} (temperatura
+promedio en grados Celsius), \texttt{AverageTemperatureUncertainty} (incertidumbre de la
+medición), \texttt{City}, \texttt{Country}, \texttt{Latitude} y \texttt{Longitude}. El
+archivo cubre \DatasetCityCount{} ciudades entre 1743 y 2013.
+
+\subsection{Limpieza de datos}
+
+Del total de registros originales, se descartaron aquellos sin temperatura observada
+(\texttt{Average\-Temperature} nulo), producto de vacíos en el proceso de medición histórica.
+Tras esta depuración quedaron \DatasetRowCount{} registros válidos distribuidos entre las
+\DatasetCityCount{} ciudades. Las fechas se tipificaron como \texttt{datetime} y, para cada
+ciudad, los registros se ordenaron cronológicamente antes de cualquier análisis posterior.
+
+\subsection{Ventana de análisis para Bogotá}
+
+Al reindexar la serie de Bogotá a una frecuencia mensual regular se identificó un
+\textbf{vacío continuo de 20 años} (enero de 1830 a junio de 1850, 246 meses consecutivos sin
+registro), además de un puñado de meses aislados sin dato en otros periodos. Rellenar un
+vacío de esa magnitud mediante interpolación habría implicado \emph{fabricar} dos décadas de
+tendencia y estacionalidad inexistentes en los datos, en lugar de simplemente completar
+huecos puntuales. Por esta razón, el análisis y el modelado se restringen al periodo
+continuo y confiable de la serie: \textbf{\AnalysisStartYear{}--\AnalysisEndYear{}}, que
+comprende \BogotaObsCount{} observaciones mensuales sin vacíos relevantes. Los pocos meses
+aislados sin registro dentro de esta ventana sí se completan mediante interpolación lineal
+en el tiempo, una operación razonable cuando el hueco es de uno o dos meses.
+
+\subsection{Metodología}
+
+\paragraph{Análisis gráfico.} Se grafica la serie histórica completa de Bogotá y se compara
+su perfil climático promedio mes a mes contra ciudades representativas de climas distintos
+(templado boreal, desértico/subtropical, tropical monzónico y templado del hemisferio sur),
+independientemente del rango de años disponible en cada una. Adicionalmente, se construye un
+boxplot mensual para inspeccionar la dispersión y detectar valores atípicos por mes.
+
+\paragraph{Descomposición.} Se aplica una descomposición clásica de tipo aditivo
+($Y_t = T_t + S_t + R_t$) con periodo estacional de 12 meses, mediante la función
+\texttt{seasonal\_decompose} de la librería \texttt{statsmodels}
+\citep{seabold2010statsmodels}. Se opta por el modelo aditivo en lugar del multiplicativo
+porque la amplitud del ciclo estacional de temperatura no muestra una relación proporcional
+clara con el nivel de la serie.
+
+\paragraph{Modelado y pronóstico.} Se divide la serie en un conjunto de entrenamiento y uno
+de prueba, reservando los últimos \TestSizeMonths{} meses para validación. Sobre el conjunto
+de entrenamiento se aplica la prueba de Dickey-Fuller aumentada (ADF)
+\citep{dickeyfuller1979} para evaluar estacionariedad, y se inspeccionan las funciones de
+autocorrelación (ACF) y autocorrelación parcial (PACF) como insumo para acotar el orden del
+modelo. El orden final $(p,d,q)\times(P,D,Q)_{12}$ de un modelo SARIMA se selecciona mediante
+una búsqueda en grilla que minimiza el criterio de información de Akaike (AIC), ajustando los
+modelos con \texttt{SARIMAX} de \texttt{statsmodels}. El modelo seleccionado se evalúa sobre
+el conjunto de prueba mediante el error cuadrático medio (RMSE) y el error absoluto medio
+(MAE); posteriormente se reajusta sobre la serie completa para proyectar
+\FutureHorizonMonths{} meses hacia el futuro, junto con su intervalo de confianza del 95\,\%.
+
+\subsection{Herramientas y reproducibilidad}
+
+Todo el análisis se implementó en Python con tipado estático estricto (verificado con
+\texttt{mypy --strict}), utilizando \texttt{pandas} \citep{mckinney2010pandas},
+\texttt{statsmodels} \citep{seabold2010statsmodels}, \texttt{scikit-learn} y
+\texttt{matplotlib}. Un único script (\texttt{src/run\_pipeline.py}) ejecuta de punta a punta
+la carga y limpieza de datos, el análisis gráfico, la descomposición y el modelado,
+regenerando de forma determinística tanto las figuras como los valores numéricos citados en
+este informe.

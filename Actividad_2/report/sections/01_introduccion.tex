@@ -1,4 +1,35 @@
 \section{Introducción}
 \label{sec:introduccion}
 
-% TODO: contexto del problema, objetivo del informe, fuente de datos.
+El estudio de series históricas de temperatura es una herramienta central para caracterizar
+el comportamiento climático de una región, distinguir su variabilidad estacional de sus
+tendencias de largo plazo, y anticipar su evolución en el corto y mediano plazo. Con el
+auge de registros históricos digitalizados a escala global, como el compilado por
+\citet{berkeleyearth}, es posible aplicar sobre estos datos las técnicas de análisis y
+modelado de series de tiempo que se han consolidado en la literatura estadística
+\citep{boxjenkins2015, hyndman2021forecasting}.
+
+Este informe tiene como objetivo analizar el histórico de temperatura superficial promedio
+mensual para \DatasetCityCount{} ciudades del mundo, con un foco particular en \textbf{Bogotá,
+Colombia}, dada la relevancia geográfica de esta ciudad para el contexto del curso. El
+análisis se estructura en tres etapas, siguiendo los lineamientos de la actividad evaluativa:
+
+\begin{enumerate}
+  \item Un \textbf{análisis gráfico} exploratorio de la serie histórica de Bogotá,
+        contrastada con el perfil climático de ciudades de climas marcadamente distintos, para
+        contextualizar sus particularidades antes de profundizar en ella.
+  \item Una \textbf{descomposición de la serie de tiempo} en sus componentes de tendencia,
+        estacionalidad y residuo, que permite aislar y caracterizar cada fuente de
+        variabilidad.
+  \item Un ejercicio de \textbf{modelado y pronóstico} mediante un modelo SARIMA, validado
+        sobre un conjunto de prueba retenido y utilizado posteriormente para proyectar el
+        comportamiento futuro de la serie.
+\end{enumerate}
+
+El resto del documento se organiza así: la Sección~\ref{sec:datos-metodologia} describe el
+origen de los datos, el proceso de limpieza y la metodología aplicada en cada etapa; la
+Sección~\ref{sec:analisis-grafico} presenta el análisis gráfico exploratorio; la
+Sección~\ref{sec:descomposicion} desarrolla la descomposición de la serie; la
+Sección~\ref{sec:modelado-pronostico} documenta el proceso de modelado y pronóstico; la
+Sección~\ref{sec:resultados-discusion} discute críticamente los resultados obtenidos y sus
+limitaciones; y la Sección~\ref{sec:conclusiones} sintetiza los hallazgos principales.

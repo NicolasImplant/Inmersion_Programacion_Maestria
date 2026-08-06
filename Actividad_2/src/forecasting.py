@@ -153,18 +153,24 @@ def evaluate_forecast(test: pd.Series, forecast_mean: pd.Series) -> dict[str, fl
 
 def plot_forecast(
     train: pd.Series,
-    test: pd.Series,
+    test: pd.Series | None,
     forecast_result: ForecastResult,
     city: str,
     output_path: Path,
     history_months: int = 180,
 ) -> Path:
-    """Grafica historico reciente, conjunto de prueba, pronostico e intervalo de confianza."""
+    """Grafica historico reciente, pronostico e intervalo de confianza.
+
+    Si `test` se provee (backtest sobre datos ya observados), tambien se dibuja como
+    referencia; si es `None`, la figura representa un pronostico puro hacia el futuro
+    mas alla del rango disponible en los datos.
+    """
     fig, ax = plt.subplots(figsize=(7.5, 3.6))
     history: pd.Series = train.iloc[-history_months:]
 
     ax.plot(history.index, history.to_numpy(), color="#1f4e79", label="Histórico (entrenamiento)")
-    ax.plot(test.index, test.to_numpy(), color="#000000", linewidth=1.0, label="Observado (prueba)")
+    if test is not None and not test.empty:
+        ax.plot(test.index, test.to_numpy(), color="#000000", linewidth=1.0, label="Observado (prueba)")
     ax.plot(
         forecast_result.forecast_mean.index,
         forecast_result.forecast_mean.to_numpy(),

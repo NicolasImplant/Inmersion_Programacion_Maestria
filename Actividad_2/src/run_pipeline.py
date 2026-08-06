@@ -46,6 +46,11 @@ def ensure_figures_dir() -> Path:
     return FIGURES_DIR
 
 
+def format_thousands_es(value: int) -> str:
+    """Formatea un entero con separador de miles '.', como es convencional en español."""
+    return f"{value:,}".replace(",", ".")
+
+
 def write_latex_macros(values: dict[str, str], output_path: Path) -> Path:
     """Serializa resultados numericos como comandos LaTeX (\\newcommand) para citarlos en el informe.
 
@@ -72,7 +77,7 @@ def run_eda_stage(df: pd.DataFrame, series: pd.Series) -> dict[str, str]:
     plot_monthly_boxplot(series, FOCUS_CITY, figures_dir / "fig03_boxplot_mensual_bogota.pdf")
 
     return {
-        "BogotaObsCount": f"{int(cast(float, stats.loc['n_observaciones', 'valor'])):,}",
+        "BogotaObsCount": format_thousands_es(int(cast(float, stats.loc['n_observaciones', 'valor']))),
         "BogotaMean": f"{stats.loc['media', 'valor']:.2f}",
         "BogotaStd": f"{stats.loc['desviacion_estandar', 'valor']:.2f}",
         "BogotaMin": f"{stats.loc['minimo', 'valor']:.2f}",
@@ -151,7 +156,7 @@ def main() -> None:
 
     macros: dict[str, str] = {
         "DatasetCityCount": str(df["City"].nunique()),
-        "DatasetRowCount": f"{len(df):,}",
+        "DatasetRowCount": format_thousands_es(len(df)),
         "AnalysisStartYear": str(pd.Timestamp(ANALYSIS_START).year),
         "AnalysisEndYear": str(series.index.max().year),
     }

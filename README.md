@@ -1,13 +1,21 @@
-# Inmersión a la Programación — Actividad 1
+# Inmersión a la Programación
 **Maestría en Inteligencia Artificial y Ciencia de Datos**  
 **Estudiante:** Juan Nicolas Patiño Rodriguez  
 **Docente:** Profesor Evaluador  
 
 ---
 
-## 🎯 Resumen de la Actividad
+## 🎯 Resumen del Repositorio
 
-Esta entrega contiene la resolución completa, optimizada y documentada de la **Actividad 1** del módulo *Inmersión a la Programación*. Consiste en tres casos de estudio tutoriales independientes que abordan desde los fundamentos de la sintaxis en Python hasta la manipulación avanzada de bases de datos utilizando Pandas, junto con un cuaderno unificado que integra todos los conceptos prácticos.
+Este repositorio reúne las entregas resueltas, optimizadas y documentadas del módulo
+*Inmersión a la Programación*, una por unidad:
+
+- **[Actividad 1](Actividad_1/README.md)** — Fundamentos de Python: tres casos de estudio
+  tutoriales (sintaxis, estructuras de datos, control de flujo y Pandas) más un cuaderno
+  individual unificado (`U1_Actividad.ipynb`).
+- **[Actividad 2](Actividad_2/README.md)** — Carga y visualización de datos con Python:
+  análisis, descomposición de series de tiempo y pronóstico SARIMA sobre un histórico de
+  temperaturas, entregado como informe científico en LaTeX/PDF.
 
 ---
 
@@ -36,14 +44,24 @@ Inmersion_Programacion_Maestria/
 │       ├── apply_solutions_*.py # Aplicadores programáticos de tipado y soluciones
 │       ├── execute_case_*.py    # Validadores de ejecución individuales
 │       └── execute_all_cases.py # Validador integral de todo el proyecto
+├── Actividad_2/
+│   ├── README.md                # Documentación académica de la Actividad 2
+│   ├── requirements.txt         # Dependencias fijadas del entorno (.venv/)
+│   ├── pyproject.toml           # Configuración de mypy --strict
+│   ├── data/                    # Dataset fuente (temperaturas históricas, 100 ciudades)
+│   ├── src/                     # Pipeline de análisis tipado (carga, EDA, descomposición, SARIMA)
+│   └── report/                  # Informe científico en LaTeX (main.tex, sections/, figures/, main.pdf)
 └── README.md                    # Este archivo: Guía de navegación general
 ```
 
 ---
 
-## 🌟 Estándares Premium de Implementación
+## 🌟 Estándares de Implementación
 
-Para asegurar un nivel de excelencia académica de maestría, se aplicaron de forma rigurosa las siguientes directrices en todos los cuadernos:
+Para asegurar un nivel de excelencia académica de maestría, se aplicaron de forma rigurosa
+las siguientes directrices, adaptadas al formato de entrega de cada actividad.
+
+### Actividad 1 (cuadernos Jupyter)
 
 1.  **Tipado Estático Estricto (`Static Typing`)**:
     *   Uso exhaustivo de anotaciones de tipo nativas (`from typing import Set, List, Dict, Any, Union, Optional`) en todas las variables, listas de contacto, diccionarios anidados de propiedades y firmas de funciones matemáticas.
@@ -54,15 +72,39 @@ Para asegurar un nivel de excelencia académica de maestría, se aplicaron de fo
 4.  **Resolución Integrada en Línea (`In-line`)**:
     *   Las soluciones de cada ejercicio práctico fueron insertadas directamente debajo de sus respectivos enunciados en el cuerpo de los cuadernos, evitando desplazamientos innecesarios y garantizando una experiencia interactiva fluida.
 
+### Actividad 2 (pipeline Python + informe LaTeX)
+
+1.  **Tipado Estático Estricto verificado con herramientas**:
+    *   Todo `src/` pasa `mypy --strict` (configurado en `pyproject.toml`), en lugar de depender solo de la disciplina del autor.
+2.  **Pipeline reproducible de un solo comando**:
+    *   `python src/run_pipeline.py` regenera de forma determinística las 7 figuras del informe y `report/macros.tex` a partir de los datos crudos.
+3.  **Una única fuente de verdad para los resultados**:
+    *   Cada estadística citada en el informe (media, RMSE, orden del modelo SARIMA, p-valor ADF, etc.) se calcula en Python y se expone como comandos LaTeX (`\newcommand`) en `report/macros.tex`, en vez de transcribirse manualmente.
+4.  **Decisiones metodológicas basadas en evidencia**:
+    *   Se identificó y documentó un vacío de 20 años en los datos de Bogotá, acotando la ventana de análisis en lugar de interpolar sobre él.
+5.  **Informe con estándares de documento científico**:
+    *   LaTeX con citas bibliográficas (`natbib`), figuras vectoriales referenciadas, y notación numérica en convención española.
+
+Ver el detalle completo de cada actividad en sus respectivos README:
+[Actividad 1](Actividad_1/README.md) · [Actividad 2](Actividad_2/README.md).
+
 ---
 
 ## 🧪 Validación y Verificación
 
-Todos los cuadernos han sido verificados secuencialmente de principio a fin, garantizando **0 excepciones no controladas** y un comportamiento perfecto.
-
-Para reproducir la validación general de todo el repositorio, ejecute en su terminal:
+**Actividad 1**: todos los cuadernos han sido verificados secuencialmente de principio a
+fin, garantizando **0 excepciones no controladas**. Para reproducir la validación:
 ```bash
 python Actividad_1/scratch/execute_all_cases.py
 ```
-
 *Este script ejecutará secuencialmente cada uno de los cuadernos, cargará las bases de datos dinámicamente y certificará la ausencia de fallas en ejecución.*
+
+**Actividad 2**: el pipeline de análisis corre de punta a punta sin excepciones y `mypy
+--strict` no reporta errores. Para reproducir la validación y compilar el informe:
+```bash
+cd Actividad_2
+./.venv/Scripts/python -m mypy
+./.venv/Scripts/python src/run_pipeline.py
+cd report && latexmk -pdf main.tex
+```
+*Ver [Actividad_2/README.md](Actividad_2/README.md) para instrucciones completas de configuración del entorno.*

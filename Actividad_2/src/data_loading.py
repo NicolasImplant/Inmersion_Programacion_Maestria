@@ -58,7 +58,10 @@ def load_clean_temperature_data(csv_path: Path | None = None) -> pd.DataFrame:
 
 
 def load_city_series(
-    city: str, csv_path: Path | None = None, interpolate: bool = False
+    city: str,
+    csv_path: Path | None = None,
+    interpolate: bool = False,
+    start: str | None = None,
 ) -> pd.Series:
     """Retorna la serie mensual de temperatura promedio (°C) de una ciudad, indexada por fecha.
 
@@ -66,6 +69,11 @@ def load_city_series(
     descomposicion de series de tiempo y modelado SARIMA. Reindexar a frecuencia mensual
     ('MS') puede introducir NaN en meses sin registro original; si `interpolate` es True,
     esos huecos se rellenan con interpolacion lineal en el tiempo.
+
+    `start` permite truncar la serie a una fecha de inicio (formato 'YYYY-MM-DD'). Es
+    util para excluir tramos historicos con vacios de datos extensos (ej. varias decadas
+    sin registros), donde interpolar equivaldria a fabricar tendencia/estacionalidad
+    inexistente en lugar de solo rellenar huecos puntuales.
     """
     df: pd.DataFrame = load_clean_temperature_data(csv_path)
     city_df: pd.DataFrame = df.loc[df["City"] == city, ["dt", "AverageTemperature"]]
@@ -75,6 +83,8 @@ def load_city_series(
             f"No hay registros para la ciudad '{city}'. Ejemplos disponibles: {available}, ..."
         )
     series: pd.Series = city_df.set_index("dt")["AverageTemperature"].asfreq("MS")
+    if start is not None:
+        series = series.loc[start:]
     if interpolate:
         series = series.interpolate(method="time")
     return series

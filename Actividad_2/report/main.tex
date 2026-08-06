@@ -1,0 +1,51 @@
+\documentclass[11pt,a4paper]{article}
+
+% ------------------------------------------------------------
+% Paquetes
+% ------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[spanish,es-noindentfirst]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{amsmath}
+\usepackage{caption}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+\usepackage[round]{natbib}
+
+\graphicspath{{figures/}}
+\sisetup{output-decimal-marker={,}}
+
+% Resultados numericos generados automaticamente por src/run_pipeline.py
+\input{macros}
+
+% ------------------------------------------------------------
+% Portada
+% ------------------------------------------------------------
+\title{Análisis, Descomposición y Pronóstico de la Serie de Temperatura Mensual de Bogotá (\AnalysisStartYear{}--\AnalysisEndYear{})}
+\author{Juan Nicolás Patiño Rodríguez \\ \small Maestría en Inteligencia Artificial y Ciencia de Datos \\ \small Universidad de La Sabana}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Se analiza el histórico de temperatura superficial promedio mensual para \DatasetCityCount{} ciudades del mundo, con foco en Bogotá, Colombia, entre \AnalysisStartYear{} y \AnalysisEndYear{}. Tras un análisis gráfico exploratorio y comparativo con ciudades de climas distintos, se aplica una descomposición aditiva de la serie de tiempo y se ajusta un modelo SARIMA para pronosticar su comportamiento futuro. El modelo seleccionado (SARIMA\SarimaOrder{}\,$\times$\,\SarimaSeasonalOrder{}$_{12}$) alcanza un error de \SI{\BacktestRmse}{\celsius} (RMSE) en un conjunto de prueba de \TestSizeMonths{} meses, y se emplea para proyectar la temperatura de Bogotá \FutureHorizonMonths{} meses hacia adelante.
+\end{abstract}
+
+\input{sections/01_introduccion}
+\input{sections/02_datos_metodologia}
+\input{sections/03_analisis_grafico}
+\input{sections/04_descomposicion}
+\input{sections/05_modelado_pronostico}
+\input{sections/06_resultados_discusion}
+\input{sections/07_conclusiones}
+
+\bibliographystyle{apalike}
+\bibliography{references}
+
+\end{document}

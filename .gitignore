@@ -22,3 +22,16 @@ Actividad_1/scratch/
 # Operating system files
 .DS_Store
 Thumbs.db
+
+# LaTeX build artifacts (main.pdf is committed intentionally; these are transient)
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc

@@ -1,5 +1,5 @@
 # Inmersión a la Programación
-**Maestría en Inteligencia Artificial y Ciencia de Datos**  
+**Maestría en Inteligencia Artificial**  
 **Estudiante:** Juan Nicolas Patiño Rodriguez  
 **Docente:** Profesor Evaluador  
 

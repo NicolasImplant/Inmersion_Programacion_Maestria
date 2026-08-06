@@ -1,5 +1,59 @@
 \section{Resultados y Discusión}
 \label{sec:resultados-discusion}
 
-% TODO: evaluacion critica de calidad/limitaciones del pronostico, metricas,
-% relacion con la descomposicion.
+\subsection{Calidad del pronóstico}
+
+El error de backtest (\SI{\BacktestRmse}{\celsius} de RMSE) es solo moderadamente mayor que
+la desviación estándar del residuo de la descomposición (\num{\ResidStd}\,°C, ver
+Sección~\ref{sec:descomposicion}). Esto es un resultado esperable y, a la vez, informativo:
+el residuo de la descomposición se calcula \emph{dentro de muestra} (usa toda la serie para
+estimar tendencia y estacionalidad), mientras que el backtest evalúa un pronóstico
+genuinamente \emph{fuera de muestra} a dos años de horizonte. Que ambos valores sean del
+mismo orden de magnitud indica que el modelo SARIMA no está agregando ruido significativo al
+proyectar hacia adelante: la mayor parte del error de pronóstico proviene de la variabilidad
+intrínseca de la serie (el mismo residuo ``irreducible'' identificado en la descomposición),
+no de una mala especificación del modelo.
+
+Cabe destacar, sin embargo, que el intervalo de confianza del pronóstico
+(Figura~\ref{fig:pronostico-futuro}) se ensancha visiblemente hacia el final del horizonte de
+\FutureHorizonMonths{} meses. Esto refleja la acumulación de incertidumbre propia de todo
+modelo autorregresivo: los primeros meses del pronóstico son más confiables que los últimos,
+por lo que el valor puntual proyectado al cierre del horizonte
+(\num{\ForecastMeanEnd}\,°C) debe interpretarse con más cautela que el pronóstico a corto
+plazo.
+
+\subsection{Limitaciones}
+
+\begin{itemize}
+  \item \textbf{Modelo univariado.} El modelo solo utiliza la historia propia de la serie de
+    Bogotá. No incorpora variables exógenas que expliquen parte de la variabilidad
+    observada, como índices de fenómenos El Niño/La Niña (ENSO), que en la
+    Sección~\ref{sec:analisis-grafico} se señalaron como posible causa de los valores
+    atípicos mensuales. Un modelo SARIMAX con dicha variable exógena podría reducir el error
+    de pronóstico en periodos de anomalía climática.
+  \item \textbf{Ventana de análisis truncada.} Como se documentó en la
+    Sección~\ref{sec:datos-metodologia}, el vacío de 20 años en los datos (1830--1850)
+    obligó a excluir ese periodo del análisis. Las conclusiones de este informe aplican al
+    régimen climático posterior a 1851 y no pueden extrapolarse retroactivamente.
+  \item \textbf{Estabilidad estructural futura.} El modelo asume que la estructura estimada
+    (orden SARIMA, varianza del residuo) se mantiene válida durante el horizonte de
+    pronóstico. Si la tendencia de calentamiento identificada en la
+    Sección~\ref{sec:descomposicion} se acelerara o revirtiera —un escenario plausible bajo
+    cambio climático—, un modelo lineal como SARIMA subestimaría o sobreestimaría
+    sistemáticamente el pronóstico a mediano y largo plazo.
+  \item \textbf{Alcance de un solo modelo.} Solo se ajustó una familia de modelos (SARIMA).
+    No se compara contra alternativas como suavizamiento exponencial (ETS) o Prophet, que
+    podrían ofrecer un desempeño distinto, particularmente ante la tendencia de largo plazo
+    observada.
+\end{itemize}
+
+\subsection{Implicaciones}
+
+En conjunto, los resultados sugieren que el clima mensual de Bogotá es altamente predecible
+en el corto plazo gracias a su marcada regularidad estacional y su baja variabilidad
+histórica, lo cual es útil para fines de planeación (por ejemplo, agrícola o urbana). Al
+mismo tiempo, la tendencia de calentamiento identificada en la descomposición —de
+aproximadamente \SI{1.5}{\celsius} entre comienzos y final del periodo analizado— es
+consistente con la señal de cambio climático documentada a escala global, aunque este
+informe, al basarse en una única serie univariada, no permite establecer relaciones causales
+al respecto.

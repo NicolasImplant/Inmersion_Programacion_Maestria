@@ -1,4 +1,35 @@
 \section{Conclusiones}
 \label{sec:conclusiones}
 
-% TODO: hallazgos clave y limitaciones del estudio.
+Este informe analizó la serie histórica de temperatura promedio mensual de Bogotá
+(\AnalysisStartYear{}--\AnalysisEndYear{}) dentro del contexto de un conjunto de datos
+global de \DatasetCityCount{} ciudades, siguiendo tres etapas: análisis gráfico,
+descomposición de la serie y modelado/pronóstico. Los hallazgos principales son:
+
+\begin{enumerate}
+  \item \textbf{Perfil climático distintivo.} A diferencia de ciudades de climas templados o
+    monzónicos, Bogotá presenta una variación estacional mínima (menor a \SI{1}{\celsius}
+    entre sus meses extremos), consistente con su ubicación ecuatorial y su altitud. Esta
+    característica la distingue claramente de las cuatro ciudades de comparación utilizadas
+    en el análisis gráfico.
+  \item \textbf{Tendencia de calentamiento de largo plazo.} La descomposición aditiva reveló
+    una tendencia ascendente sostenida a lo largo de los 162 años analizados, mientras que la
+    componente estacional se mantuvo estable en amplitud, lo que respalda la elección del
+    modelo aditivo frente al multiplicativo.
+  \item \textbf{Pronóstico preciso a corto plazo.} Un modelo SARIMA\SarimaOrder{}\,$\times$\,
+    \SarimaSeasonalOrder{}$_{12}$, seleccionado por AIC y validado mediante backtest, logró un
+    error de \SI{\BacktestRmse}{\celsius} (RMSE) al proyectar \TestSizeMonths{} meses fuera de
+    muestra, un desempeño consistente con la baja variabilidad intrínseca de la serie
+    identificada en la descomposición.
+  \item \textbf{Limitaciones reconocidas.} El vacío de datos 1830--1850 acota la validez de
+    las conclusiones al periodo posterior a 1851; el modelo es univariado y no captura
+    anomalías asociadas a fenómenos climáticos como El Niño/La Niña; y la incertidumbre del
+    pronóstico crece con el horizonte, por lo que sus proyecciones deben interpretarse con
+    mayor cautela hacia el final de los \FutureHorizonMonths{} meses proyectados.
+\end{enumerate}
+
+Como trabajo futuro, sería valioso extender el análisis a un modelo SARIMAX con variables
+exógenas asociadas a ENSO, comparar el desempeño contra modelos alternativos (ETS, Prophet),
+y replicar la metodología —ya generalizada en el pipeline de análisis desarrollado— sobre
+otras ciudades del conjunto de datos para contrastar la robustez de los hallazgos aquí
+presentados.

@@ -1,5 +1,74 @@
 \section{Modelado y Pronóstico}
 \label{sec:modelado-pronostico}
 
-% TODO: split train/test, prueba ADF, ACF/PACF, seleccion de orden SARIMA,
-% pronostico con intervalos de confianza.
+\subsection{Estacionariedad}
+
+Sobre el conjunto de entrenamiento (todos los meses de la serie salvo los últimos
+\TestSizeMonths{}, reservados para prueba) se aplicó la prueba de Dickey-Fuller aumentada.
+El estadístico obtenido fue de \num{\AdfStatistic} con un valor $p$ de \num{\AdfPValue}, muy
+por debajo del umbral convencional de $0{,}05$. Esto permite rechazar la hipótesis nula de
+raíz unitaria: la serie de temperatura de Bogotá es estacionaria en el sentido amplio, por lo
+que el orden de diferenciación regular del modelo SARIMA se fija en $d = 0$. La
+estacionalidad, en cambio, sí requiere una diferenciación estacional ($D = 1$, periodo 12),
+consistente con la fuerte periodicidad anual identificada en la Sección~\ref{sec:descomposicion}.
+
+\subsection{Identificación del orden del modelo}
+
+La Figura~\ref{fig:acf-pacf} muestra las funciones de autocorrelación (ACF) y
+autocorrelación parcial (PACF) del conjunto de entrenamiento, utilizadas como referencia
+para acotar el orden del modelo antes de la búsqueda automática.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{fig05_acf_pacf_bogota.pdf}
+  \caption{ACF y PACF de la serie de entrenamiento de Bogotá.}
+  \label{fig:acf-pacf}
+\end{figure}
+
+Con base en estas funciones se acotó una grilla de búsqueda de órdenes
+$(p,q) \in \{0,1,2\}^2$ y $(P,Q) \in \{0,1\}^2$ (con $d=0$, $D=1$, periodo 12 fijos), ajustando
+un modelo \texttt{SARIMAX} para cada combinación y reteniendo la de menor AIC. El orden
+seleccionado fue:
+\[
+  \text{SARIMA}\SarimaOrder{} \times \SarimaSeasonalOrder{}_{12}
+\]
+es decir, un componente autorregresivo y de media móvil no estacional de orden
+$(p,d,q) = \SarimaOrder{}$, combinado con un componente puramente de media móvil estacional
+$(P,D,Q)_{12} = \SarimaSeasonalOrder{}$.
+
+\subsection{Validación mediante backtest}
+
+El modelo se ajustó sobre el conjunto de entrenamiento y se utilizó para pronosticar los
+\TestSizeMonths{} meses reservados como prueba, ya observados pero no utilizados en el
+ajuste. La Figura~\ref{fig:pronostico-backtest} compara el pronóstico contra los valores
+reales. El error obtenido fue de \SI{\BacktestRmse}{\celsius} (RMSE) y
+\SI{\BacktestMae}{\celsius} (MAE), es decir, el modelo se equivoca en promedio por menos de
+medio grado Celsius al proyectar dos años hacia adelante.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{fig06_pronostico_backtest_bogota.pdf}
+  \caption{Backtest: pronóstico SARIMA contra los últimos \TestSizeMonths{} meses observados
+    (no usados en el ajuste), con intervalo de confianza del 95\,\%.}
+  \label{fig:pronostico-backtest}
+\end{figure}
+
+\subsection{Pronóstico del comportamiento futuro}
+
+Una vez validado el orden del modelo mediante el backtest, este se reajustó sobre la serie
+\emph{completa} \AnalysisStartYear{}--\AnalysisEndYear{} (sin retener ningún mes) para
+proyectar su comportamiento \FutureHorizonMonths{} meses más allá del último dato
+disponible. La Figura~\ref{fig:pronostico-futuro} presenta este pronóstico junto con su
+intervalo de confianza del 95\,\%. La proyección mantiene el ciclo estacional característico
+de Bogotá y converge hacia una temperatura media de aproximadamente
+\num{\ForecastMeanEnd}\,°C al final del horizonte, coherente con el nivel más reciente de la
+componente de tendencia identificada en la descomposición.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{fig07_pronostico_futuro_bogota.pdf}
+  \caption{Pronóstico SARIMA de la temperatura de Bogotá para los \FutureHorizonMonths{}
+    meses posteriores al último dato disponible (\AnalysisEndYear{}), con intervalo de
+    confianza del 95\,\%.}
+  \label{fig:pronostico-futuro}
+\end{figure}
